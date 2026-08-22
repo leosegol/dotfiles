@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# Run automatically by `yadm clone`, or manually with `yadm bootstrap`.
+# Idempotent: safe to re-run on an already-configured machine.
+
+set -euo pipefail
+
+info() { printf '\n\033[1;35m==>\033[0m %s\n' "$*"; }
+
+# --- packages -----------------------------------------------------------------
+if command -v brew >/dev/null; then
+  info 'Installing packages with homebrew'
+  brew install --quiet \
+    tmux \
+    neovim \
+    fzf \
+    zoxide \
+    bat \
+    starship \
+    eza \
+    lazygit \
+    yadm
+else
+  info 'Homebrew not found - skipping packages'
+  echo 'Install it from https://brew.sh, then re-run: yadm bootstrap'
+fi
+
+# --- oh-my-zsh ----------------------------------------------------------------
+# .zshrc sources $ZSH/oh-my-zsh.sh, so the shell breaks without it.
+if [[ ! -d ${ZSH:-$HOME/.oh-my-zsh} ]]; then
+  info 'Installing oh-my-zsh'
+  RUNZSH=no KEEP_ZSHRC=yes \
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+else
+  info 'oh-my-zsh already present'
+fi
+
+# --- tmux plugins -------------------------------------------------------------
+TPM_DIR="$HOME/.tmux/plugins/tpm"
+if [[ ! -d $TPM_DIR ]]; then
+  info 'Installing tpm'
+  git clone --depth 1 https://github.com/tmux-plugins/tpm "$TPM_DIR"
+else
+  info 'tpm already present'
+fi
+
+info 'Installing tmux plugins'
+"$TPM_DIR/bin/install_plugins"
+
+# --- neovim -------------------------------------------------------------------
+# Sync lazy.nvim to the tracked lazy-lock.json so plugin versions match.
+if command -v nvim >/dev/null; then
+  info 'Syncing neovim plugins'
+  nvim --headless '+Lazy! restore' +qa 2>&1 | tail -3 || true
+fi
+
+info 'Done'
+cat <<'EOF'
+
+Not handled automatically (they involve credentials):
+  - ssh keys. ~/.ssh/config expects ~/.ssh/agentzero (work, github.com) and
+    ~/.ssh/id_ed25519 (personal, github-personal alias).
+  - gh auth login
+
+Reload tmux config with: tmux source-file ~/.tmux.conf
+EOF

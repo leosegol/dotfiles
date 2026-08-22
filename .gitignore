@@ -1,0 +1,38 @@
+# This repo's work tree is $HOME, so ignore everything by default and whitelist
+# explicitly. That keeps an accidental `yadm add -A` from sweeping up ssh keys,
+# API tokens, caches, or the 19-42MB binaries sitting in ~/.local/bin.
+*
+
+# --- top level ----------------------------------------------------------------
+!.gitignore
+!.ctags
+!.gitconfig
+!.tmux.conf
+!.tmux.conf.local
+!.zshrc
+
+# --- ~/.config ----------------------------------------------------------------
+!.config/
+.config/*
+!.config/bat/
+!.config/bat/**
+!.config/ghostty/
+!.config/ghostty/**
+!.config/nvim/
+!.config/nvim/**
+!.config/starship.toml
+!.config/tmux_cht/
+!.config/tmux_cht/**
+!.config/yadm/
+.config/yadm/*
+!.config/yadm/bootstrap
+
+# --- ~/.local -----------------------------------------------------------------
+# Only the hand-written scripts and their bin symlinks; not the installed tools.
+!.local/
+.local/*
+!.local/bin/
+.local/bin/*
+!.local/bin/tmux-sessionizer
+!.local/scripts/
+!.local/scripts/**
