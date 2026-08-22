@@ -8,3 +8,10 @@ quit-after-last-window-closed = true
 theme = Rose Pine
 shell-integration-features = no-cursor
 macos-option-as-alt = left
+
+# Make shift+enter send ESC + CR, which is exactly what option+enter sends and
+# what TUIs read as "insert a newline". Going through the keyboard protocol
+# instead would be cleaner, but tmux 3.6 only honours an app's modifyOtherKeys
+# request and ignores the kitty one, so a protocol-based shift+enter silently
+# collapses to a plain enter inside tmux. These bytes need no protocol at all.
+keybind = shift+enter=text:\x1b\r

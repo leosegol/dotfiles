@@ -313,6 +313,15 @@ set -g status-justify centre
 # renders as the exact Rose Pine hex values rather than nearest-256 approximations.
 set -as terminal-features ',*:RGB'
 
+# Let modified keys through. tmux defaults extended-keys to off, which collapses
+# shift+enter to a plain CR, so an app inside tmux cannot tell it from enter --
+# that's why shift+enter stopped inserting a newline. `extkeys` tells tmux that
+# Ghostty can report these keys in the first place, and csi-u is the encoding
+# (\e[13;2u) that programs actually recognise; the default xterm form is not.
+set -s extended-keys on
+set -s extended-keys-format csi-u
+set -as terminal-features ',xterm-ghostty:extkeys'
+
 # tmux-sessionizer. The popup keeps the picker out of the window list and
 # disappears on cancel; -s N jumps straight to the nth candidate.
 bind-key -r f display-popup -E -w 80% -h 80% "~/.local/bin/tmux-sessionizer"
@@ -320,6 +329,12 @@ bind-key -r M-h run-shell "~/.local/bin/tmux-sessionizer -s 0"
 bind-key -r M-j run-shell "~/.local/bin/tmux-sessionizer -s 1"
 bind-key -r M-k run-shell "~/.local/bin/tmux-sessionizer -s 2"
 bind-key -r M-l run-shell "~/.local/bin/tmux-sessionizer -s 3"
+
+# Window navigation without the prefix. -n puts these in the root table, so
+# option+left/right is a single chord; prefix + C-h/C-l still does the same.
+# (Ghostty's macos-option-as-alt=left is what makes the left option key send M-.)
+bind-key -n M-Left previous-window
+bind-key -n M-Right next-window
 
 # Personal configuration (not in source control).
 source -q ~/.tmux.conf.personal
