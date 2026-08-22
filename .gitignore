@@ -21,8 +21,6 @@
 !.config/nvim/
 !.config/nvim/**
 !.config/starship.toml
-!.config/tmux_cht/
-!.config/tmux_cht/**
 !.config/yadm/
 .config/yadm/*
 !.config/yadm/bootstrap

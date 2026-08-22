@@ -321,9 +321,6 @@ bind-key -r M-j run-shell "~/.local/bin/tmux-sessionizer -s 1"
 bind-key -r M-k run-shell "~/.local/bin/tmux-sessionizer -s 2"
 bind-key -r M-l run-shell "~/.local/bin/tmux-sessionizer -s 3"
 
-# tmux-cht.
-bind-key -r i run-shell "tmux neww tmux-cht"
-
 # Personal configuration (not in source control).
 source -q ~/.tmux.conf.personal
 
