@@ -15,3 +15,10 @@ macos-option-as-alt = left
 # request and ignores the kitty one, so a protocol-based shift+enter silently
 # collapses to a plain enter inside tmux. These bytes need no protocol at all.
 keybind = shift+enter=text:\x1b\r
+
+# Ghostty defaults option+left/right to esc:b / esc:f (readline word-jump), so
+# tmux never sees M-Left/M-Right and cannot bind window navigation to them.
+# Send the real alt+arrow sequences instead; option+b / option+f still do the
+# word-jump these replace.
+keybind = alt+arrow_left=text:\x1b[1;3D
+keybind = alt+arrow_right=text:\x1b[1;3C
