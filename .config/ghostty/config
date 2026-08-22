@@ -16,9 +16,11 @@ macos-option-as-alt = left
 # collapses to a plain enter inside tmux. These bytes need no protocol at all.
 keybind = shift+enter=text:\x1b\r
 
-# Ghostty defaults option+left/right to esc:b / esc:f (readline word-jump), so
-# tmux never sees M-Left/M-Right and cannot bind window navigation to them.
-# Send the real alt+arrow sequences instead; option+b / option+f still do the
-# word-jump these replace.
-keybind = alt+arrow_left=text:\x1b[1;3D
-keybind = alt+arrow_right=text:\x1b[1;3C
+# Window navigation with cmd+left/right. Ghostty defaults these to \x01 / \x05
+# (readline start/end of line), so tmux never sees them; emit the alt+arrow
+# sequences instead, which tmux reads as M-Left/M-Right and binds in
+# ~/.tmux.conf.local. tmux has no notion of a super modifier, so borrowing
+# alt's encoding is the only way to get cmd through to it.
+# Replaces cmd+left/right as home/end -- ctrl+a / ctrl+e still do that.
+keybind = super+arrow_left=text:\x1b[1;3D
+keybind = super+arrow_right=text:\x1b[1;3C
